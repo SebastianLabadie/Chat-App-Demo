@@ -3,6 +3,7 @@ const express = require("express");
 const http = require("http");
 const socketio = require("socket.io");
 const router = require("./router");
+const cors = require("cors")
 
 const { addUser, removeUser, getUser, getUsersInRoom } = require("./users.js");
 
@@ -16,6 +17,7 @@ const io = socketio(server);
 
 //setting app
 app.use(router);
+app.use(cors());
 
 //initialize server --- im using await for clean code
 async function main() {
@@ -30,7 +32,7 @@ io.on("connection", (socket) => {
 
   socket.on("join", ({ name, room }, callback) => {
     const { error, user } = addUser({ id: socket.id, name, room });
-    console.log(user);
+    
     if (error) return callback(error);
 
     socket.join(user.room);
@@ -53,14 +55,18 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendMessage", (message, callback) => {
-    const user = getUser({ id: socket.id });
-
+    const user = getUser(socket.id);
+    
     io.to(user.room).emit("message", { user: user.name, text: message });
 
     callback();
   });
 
   socket.on("disconnect", () => {
-    console.log("user left");
+    const user= removeUser(socket.id)
+
+    if (user) {
+      io.to(user.room).emit('message',{user:'admin',text:`${user.name} has left.` })
+    }
   });
 });
