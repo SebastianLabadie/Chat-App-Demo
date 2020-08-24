@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 import './InfoBar.css'
 
 
@@ -10,7 +11,7 @@ const InfoBar = ({room}) => {
             <h3 >{room}</h3>
         </div>
         <div className="rightInnerContainer">
-            <a href=""><i className="material-icons close">close</i></a>
+            <Link to="/"><i className="material-icons close">close</i></Link>
         </div>
     </div>
     )

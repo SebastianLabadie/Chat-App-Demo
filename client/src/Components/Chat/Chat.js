@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import queryString from "query-string";
 import io from "socket.io-client";
+import {Link} from 'react-router-dom'
 /* 
 import TextContainer from '../TextContainer/TextContainer';*/
 import Messages from '../Messages/Messages';
@@ -47,7 +48,6 @@ const Chat = ({ location }) => {
     }
   };
 
-  console.log(message,messages)
 
   return (
     <div className="outerContainer">
